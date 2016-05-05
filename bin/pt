@@ -15,10 +15,18 @@ function main() {
 
     [ -z "${command}" ] && { pt-help; exit 0; }
 
+    #
+    # required environment variables
+    #
+
     local jboss_home
     jboss_home=$(get-jboss-home)
 
-    do-${command} "${jboss_home}" "${data_dir}"
+    #
+    # execute the command
+    #
+
+    do-${command} "${jboss_home}"
 }
 
 function do-reset() {
@@ -41,6 +49,17 @@ function do-reset() {
     fi
 }
 
+#
+# Collects all relevant data (configuration, logs, etc) and places a zip file in the data directory provided
+# as the value of the PT_DATA_DIR environment variable.
+#
+function do-collect() {
+
+    [ -z "${PT_DATA_DIR}" ] && fail "required 'PT_DATA_DIR' environment variable not set"
+    local data_dir="${PT_DATA_DIR}"
+    [ -d "${data_dir}" ] || fail "the target data directory ${data_dir} is not a valid directory"
+}
+
 function do-test() {
 
     local jboss_home=$1
@@ -50,19 +69,6 @@ main $@
 
 #data_dir="/c/ovidiu/data"
 #
-#function get-java-pid() {
-#
-#    IFS="$(printf '\n\r')"
-#    local pid=""
-#    for line in $(tasklist); do
-#       if echo "${line}" | grep -q "^java.exe"; then
-#           pid=$(echo "${line}" | sed -e 's/^java\.exe[ \t]*\([0-9]*\)[ \t].*$/\1/')
-#           break;
-#       fi
-#    done
-#    IFS="$(printf ' \t\n')"
-#    echo "${pid}"
-#}
 #
 #function export-data() {
 #
@@ -114,26 +120,6 @@ main $@
 #    for lf in $(dir "${log_dir}"); do
 #        echo "    ${lf}"
 #    done
-#}
-#
-#function stop() {
-#
-#    local jboss_home=$1
-#    local data_dir=$2
-#
-#    stop-jboss-instance
-#    export-data "${jboss_home}" "${data_dir}"
-#}
-#
-#function start() {
-#
-#    local jboss_home=$1
-#
-#    local java_pid=$(get-java-pid) || exit 1
-#    [ -n "${java_pid}" ] && { echo "a java process with PID ${java_pid} already exists" 1>&2; exit 1; }
-#
-#    remove-logs "${jboss_home}/standalone/log"
-#    start-jboss-instance
 #}
 #
 

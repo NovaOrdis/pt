@@ -9,6 +9,24 @@ function pt-help() {
 }
 
 #
+# Java functions
+#
+
+#function get-java-pid() {
+#
+#    IFS="$(printf '\n\r')"
+#    local pid=""
+#    for line in $(tasklist); do
+#       if echo "${line}" | grep -q "^java.exe"; then
+#           pid=$(echo "${line}" | sed -e 's/^java\.exe[ \t]*\([0-9]*\)[ \t].*$/\1/')
+#           break;
+#       fi
+#    done
+#    IFS="$(printf ' \t\n')"
+#    echo "${pid}"
+#}
+
+#
 # JBoss-related functions
 #
 
