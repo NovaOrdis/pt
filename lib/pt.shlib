@@ -13,10 +13,22 @@ function pt-help() {
 #
 
 #
-# return the content of JBOSS_HOME at stdout or fails if the environment variable is not found
+# return the content of JBOSS_HOME at stdout or fails if the environment variable is not found, or
+# it contains an invalid value
 #
 function get-jboss-home() {
 
     [ -z "${JBOSS_HOME}" ] && fail "'JBOSS_HOME' environment variable not found"
+    [ -d ${JBOSS_HOME} ] || fail "'JBOSS_HOME' environment variable content ${JBOSS_HOME} is not a directory"
     echo ${JBOSS_HOME}
+}
+
+#
+# return 0 if the JBoss instance was running and it was successfully stopped, 1 if the JBoss instance was
+# not running. Fails if the JBoss instance was running but it failed to stop.
+#
+function stop-jboss() {
+    echo "stopping the JBoss service ..."
+    net stop WFAS81SVC
+    return 0
 }

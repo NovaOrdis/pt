@@ -18,9 +18,17 @@ function main() {
     local jboss_home
     jboss_home=$(get-jboss-home)
 
-    echo ${jboss_home}
+    do-${command} "${jboss_home}" "${data_dir}"
+}
 
-    #do-${command} "${jboss_home}" "${data_dir}"
+function do-restart() {
+
+    local jboss_home=$1
+    [ -z "${jboss_home}" ] && fail "'jboss_home' not provided"
+
+    if ! stop-jboss "${jboss_home}"; then
+        warn "the JBoss instance was not running"
+    fi
 }
 
 data_dir="/c/ovidiu/data"
@@ -58,12 +66,6 @@ function start-jboss-instance() {
 
     echo "starting the JBoss service ..."
     net start WFAS81SVC
-}
-
-function stop-jboss-instance() {
-
-    echo "stopping the JBoss service ..."
-    net stop WFAS81SVC
 }
 
 function export-data() {
