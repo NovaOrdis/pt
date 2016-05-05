@@ -59,13 +59,32 @@ function stop-jboss() {
 
 }
 
+#
+# returns 0 upon successful startup, 1 if the JBoss instance was already started. Fails if the start process fails.
+#
 function start-jboss() {
 
     info "starting the JBoss service ..."
 
     net start WFAS81SVC
 
-    echo "net return value $?"
+    #
+    # net returns:
+    #
+    #     0 upon successful startup
+    #     2 if the service was previously started
+    #
+
+    local result=$?
+
+    if [ ${result} -eq 2 ]; then
+        #
+        # service already started
+        #
+        return 1
+    fi
+
+    echo "net return value ${result}"
 }
 
 

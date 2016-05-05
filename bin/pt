@@ -33,8 +33,16 @@ function do-restart() {
 
 function do-start-jboss() {
 
-    start-jboss
+    if ! start-jboss; then
+        info "service already running"
+    fi
 }
+
+function do-stop-jboss() {
+
+    stop-jboss
+}
+
 
 data_dir="/c/ovidiu/data"
 
