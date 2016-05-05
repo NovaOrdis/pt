@@ -10,3 +10,9 @@ Commands:
     restart - Stop all environment components, clean logs and temporary data directories and
       files, where necessary, and restart the environment components, rendering the
       environment ready for testing.
+
+    status
+
+    start - cleans the log files and restart the instances.
+
+    stop

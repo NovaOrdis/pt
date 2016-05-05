@@ -1,29 +1,10 @@
-#/bin/bash
+#!/bin/bash
 
 f=$(dirname $0)/../lib/std.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found, $(basename $0) incorrectly installed" 1>&2; exit 1; }
 f=$(dirname $0)/../lib/pt.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found, $(basename $0) incorrectly installed" 1>&2; exit 1; }
 
 #jboss_home=""
 data_dir="/c/ovidiu/data"
-
-function help() {
-
-cat <<EOF
-The load enviornment control script.
-
-Usage:
-
-    enviornment <command>
-
-Commands:
-
-    status
-
-    start - cleans the log files and restart the instances.
-
-    stop
-EOF
-}
 
 function linux-to-win-path() {
 

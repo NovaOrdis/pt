@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function pt-help() {
+function help() {
 
     local help_file
     help_file=$(dirname $0)/lib/ptx.txt
