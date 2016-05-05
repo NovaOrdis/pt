@@ -21,6 +21,13 @@ function main() {
     do-${command} "${jboss_home}" "${data_dir}"
 }
 
+function do-test() {
+    local jboss_home=$1
+    info "testing ..."
+
+    clean-logs "${jboss_home}"
+}
+
 function do-restart() {
 
     local jboss_home=$1
@@ -35,105 +42,102 @@ function do-restart() {
     fi
 }
 
-function do-test() {
-    info "testing ..."
-}
-
-data_dir="/c/ovidiu/data"
-
-function linux-to-win-path() {
-
-    local path=$1
-    path=${path/\/c\//C:\\}
-    path=${path//\//\\}
-    echo "${path}"
-}
-
-function get-java-pid() {
-
-    IFS="$(printf '\n\r')"
-    local pid=""
-    for line in $(tasklist); do
-       if echo "${line}" | grep -q "^java.exe"; then
-           pid=$(echo "${line}" | sed -e 's/^java\.exe[ \t]*\([0-9]*\)[ \t].*$/\1/')
-           break;
-       fi
-    done
-    IFS="$(printf ' \t\n')"
-    echo "${pid}"
-}
-
-function export-data() {
-
-    local jboss_home=$1    
-    local target_dir=$2
-
-    local dir_name="load-data-"$(date +'%y-%m-%d-%H-%M-%S')
-    local dir_path="${target_dir}/${dir_name}"
-    mkdir "${dir_path}" && echo "created ${dir_name}" || exit 1
-
-    local access_log_file=${jboss_home}/standalone/log/access_log.log
-    cp "${access_log_file}" "${dir_path}" && echo "copied "$(basename "${access_log_file}") || exit 1
-
-    local access_log_def_file_name=$(basename "${access_log_file}" .log).def
-
-    #
-    # copy the access log definition
-    #
-    local config_file=${jboss_home}/standalone/configuration/standalone-pi-mssql-ha-tcp.xml
-
-    local access_log_format
-    access_log_format=$(grep "<access-log pattern=" "${config_file}") || exit 1
-    access_log_format=${access_log_format#*<access-log pattern=\"}
-    access_log_format=${access_log_format%\"/>}
-    echo ${access_log_format} > "${dir_path}/${access_log_def_file_name}" && echo "access log definition written in ${access_log_def_file_name}"
-    (cd "${dir_path}"; zip -r ../${dir_name}.zip *) && echo "packaged data as ${dir_name}.zip" || exit 1
-    rm -r "${dir_path}" && echo "removed ${dir_path}" || exit 1
-}
-
-function status() {
-
-    local jboss_home=$1
-
-    local java_pid=$(get-java-pid) || exit 1
-    local p=$(linux-to-win-path "${jboss_home}")
-
-    echo ""
-    echo "JBOSS_HOME ${p}"
-    
-    if [ -z "${java_pid}" ]; then
-        echo "no java process found"
-    else
-        echo "java (PID ${java_pid}) running"
-    fi
-
-    local log_dir=$(linux-to-win-path "${jboss_home}/standalone/log")
-
-    echo "log files:"
-    for lf in $(dir "${log_dir}"); do
-        echo "    ${lf}"
-    done
-}
-
-function stop() {
-
-    local jboss_home=$1
-    local data_dir=$2
-
-    stop-jboss-instance
-    export-data "${jboss_home}" "${data_dir}"
-}
-
-function start() {
-
-    local jboss_home=$1
-
-    local java_pid=$(get-java-pid) || exit 1
-    [ -n "${java_pid}" ] && { echo "a java process with PID ${java_pid} already exists" 1>&2; exit 1; }
-
-    remove-logs "${jboss_home}/standalone/log"
-    start-jboss-instance
-}
-
-
 main $@
+
+#data_dir="/c/ovidiu/data"
+#
+#function linux-to-win-path() {
+#
+#    local path=$1
+#    path=${path/\/c\//C:\\}
+#    path=${path//\//\\}
+#    echo "${path}"
+#}
+#
+#function get-java-pid() {
+#
+#    IFS="$(printf '\n\r')"
+#    local pid=""
+#    for line in $(tasklist); do
+#       if echo "${line}" | grep -q "^java.exe"; then
+#           pid=$(echo "${line}" | sed -e 's/^java\.exe[ \t]*\([0-9]*\)[ \t].*$/\1/')
+#           break;
+#       fi
+#    done
+#    IFS="$(printf ' \t\n')"
+#    echo "${pid}"
+#}
+#
+#function export-data() {
+#
+#    local jboss_home=$1
+#    local target_dir=$2
+#
+#    local dir_name="load-data-"$(date +'%y-%m-%d-%H-%M-%S')
+#    local dir_path="${target_dir}/${dir_name}"
+#    mkdir "${dir_path}" && echo "created ${dir_name}" || exit 1
+#
+#    local access_log_file=${jboss_home}/standalone/log/access_log.log
+#    cp "${access_log_file}" "${dir_path}" && echo "copied "$(basename "${access_log_file}") || exit 1
+#
+#    local access_log_def_file_name=$(basename "${access_log_file}" .log).def
+#
+#    #
+#    # copy the access log definition
+#    #
+#    local config_file=${jboss_home}/standalone/configuration/standalone-pi-mssql-ha-tcp.xml
+#
+#    local access_log_format
+#    access_log_format=$(grep "<access-log pattern=" "${config_file}") || exit 1
+#    access_log_format=${access_log_format#*<access-log pattern=\"}
+#    access_log_format=${access_log_format%\"/>}
+#    echo ${access_log_format} > "${dir_path}/${access_log_def_file_name}" && echo "access log definition written in ${access_log_def_file_name}"
+#    (cd "${dir_path}"; zip -r ../${dir_name}.zip *) && echo "packaged data as ${dir_name}.zip" || exit 1
+#    rm -r "${dir_path}" && echo "removed ${dir_path}" || exit 1
+#}
+#
+#function status() {
+#
+#    local jboss_home=$1
+#
+#    local java_pid=$(get-java-pid) || exit 1
+#    local p=$(linux-to-win-path "${jboss_home}")
+#
+#    echo ""
+#    echo "JBOSS_HOME ${p}"
+#
+#    if [ -z "${java_pid}" ]; then
+#        echo "no java process found"
+#    else
+#        echo "java (PID ${java_pid}) running"
+#    fi
+#
+#    local log_dir=$(linux-to-win-path "${jboss_home}/standalone/log")
+#
+#    echo "log files:"
+#    for lf in $(dir "${log_dir}"); do
+#        echo "    ${lf}"
+#    done
+#}
+#
+#function stop() {
+#
+#    local jboss_home=$1
+#    local data_dir=$2
+#
+#    stop-jboss-instance
+#    export-data "${jboss_home}" "${data_dir}"
+#}
+#
+#function start() {
+#
+#    local jboss_home=$1
+#
+#    local java_pid=$(get-java-pid) || exit 1
+#    [ -n "${java_pid}" ] && { echo "a java process with PID ${java_pid} already exists" 1>&2; exit 1; }
+#
+#    remove-logs "${jboss_home}/standalone/log"
+#    start-jboss-instance
+#}
+#
+
