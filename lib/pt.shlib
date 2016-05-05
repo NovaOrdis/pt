@@ -19,7 +19,7 @@ function pt-help() {
 function get-jboss-home() {
 
     [ -z "${JBOSS_HOME}" ] && fail "'JBOSS_HOME' environment variable not found"
-    [ -d ${JBOSS_HOME} ] || fail "'JBOSS_HOME' environment variable content ${JBOSS_HOME} is not a directory"
+    [ -d "${JBOSS_HOME}" ] || fail "'JBOSS_HOME' environment variable content ${JBOSS_HOME} is not a directory"
     echo ${JBOSS_HOME}
 }
 
