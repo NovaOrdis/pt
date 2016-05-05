@@ -3,7 +3,26 @@
 f=$(dirname $0)/../lib/std.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found, $(basename $0) incorrectly installed" 1>&2; exit 1; }
 f=$(dirname $0)/../lib/pt.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found, $(basename $0) incorrectly installed" 1>&2; exit 1; }
 
-#jboss_home=""
+function main() {
+
+    local command=""
+    while [ -n "$1" ]; do
+        if [ -z "${command}" ]; then
+            command=$1
+        fi
+        shift
+    done
+
+    [ -z "${command}" ] && { pt-help; exit 0; }
+
+    local jboss_home
+    jboss_home=$(get-jboss-home)
+
+    echo ${jboss_home}
+
+    #do-${command} "${jboss_home}" "${data_dir}"
+}
+
 data_dir="/c/ovidiu/data"
 
 function linux-to-win-path() {
@@ -119,19 +138,5 @@ function start() {
     start-jboss-instance
 }
 
-function main() {
-
-    local command=""
-    while [ -n "$1" ]; do
-        if [ -z "${command}" ]; then
-            command=$1
-        fi
-        shift
-    done
-
-    [ -z "${command}" ] && { help; exit 0; }
-
-    ${command} "${jboss_home}" "${data_dir}"
-}
 
 main $@

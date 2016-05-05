@@ -1,9 +1,22 @@
 #!/bin/bash
 
-function help() {
+function pt-help() {
 
     local help_file
     help_file=$(dirname $0)/../lib/pt.txt
     [ ! -f ${help_file} ] && fail "help file ${help_file} not found, $(basename $0) was not installed correctly"
     cat ${help_file}
+}
+
+#
+# JBoss-related functions
+#
+
+#
+# return the content of JBOSS_HOME at stdout or fails if the environment variable is not found
+#
+function get-jboss-home() {
+
+    [ -z "${JBOSS_HOMEx}" ] && fail "'JBOSS_HOME' environment variable not found"
+    echo ${JBOSS_HOME}
 }
