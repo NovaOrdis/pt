@@ -35,8 +35,25 @@ function stop-jboss() {
     #
 
     net stop WFAS81SVC
+
     local result=$?
 
+    if [ ${result} -eq 2 ]; then
+        #
+        # service was not started
+        #
+        return 1
+    fi
+
     echo "result: ${result}"
+
+    #
+    # fail if we failed to stop a running JBoss instance
+    #
+
+    #
+    # successfully stopped a running instance
+    #
+    return 0
 
 }
