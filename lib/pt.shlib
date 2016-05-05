@@ -31,11 +31,13 @@ function stop-jboss() {
 
     info "stopping the JBoss service ..."
 
-    #
-    # if the service was not started, the net command returns 2
-    #
-
     net stop WFAS81SVC
+
+    #
+    # net returns:
+    #   0 upon successful stop
+    #   2 if no started JBoss service was found
+    #
 
     local result=$?
 
@@ -46,21 +48,28 @@ function stop-jboss() {
         return 1
     fi
 
-    echo "result: ${result}"
+    debug "net return value: ${result}"
 
     #
     # fail if we failed to stop a running JBoss instance
     #
 
+    if [ ${result} -ne 0 ]; then
+        #
+        # something went wrong while stopping JBoss with net
+        #
+        fail "something went wrong while stopping JBoss as a Windows service, net return code ${result}"
+        return 1
+    fi
+
     #
     # successfully stopped a running instance
     #
     return 0
-
 }
 
 #
-# returns 0 upon successful startup, 1 if the JBoss instance was already started. Fails if the start process fails.
+# returns 0 upon successful startup, 1 if the JBoss instance was already started. Fails if JBoss fails to start.
 #
 function start-jboss() {
 
@@ -85,6 +94,40 @@ function start-jboss() {
     fi
 
     echo "net return value ${result}"
+
+    #
+    # fail if we failed to start a JBoss instance
+    #
+
+    if [ ${result} -ne 0 ]; then
+        #
+        # something went wrong while starting JBoss with net
+        #
+        fail "something went wrong while starting JBoss as a Windows service, net return code ${result}"
+        return 1
+    fi
+
+    #
+    # successfully started the instance
+    #
+    return 0
 }
+
+#
+# return 0 if logs were cleaned, 1 if no logs to clean were found and it fails if anything fails during
+# the cleaning process
+#
+function clean-logs() {
+
+    local jboss_home=$1
+    [ -z "${jboss_home}" ] && fail "'jboss_home' not provided"
+
+    local jboss_log_dir="${jboss_home}/standalone/log"
+    [ -d ${jboss_log_dir} ] || fail "JBoss log directory ${jboss_log_dir} is not a valid directory"
+
+    #(cd "${log_dir}"; rm *) && echo "removed log files from ${log_dir}"
+}
+
+
 
 

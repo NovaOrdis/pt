@@ -29,20 +29,15 @@ function do-restart() {
     if ! stop-jboss; then
         warn "the JBoss instance was not running, continuing the environment restart process ..."
     fi
-}
 
-function do-start-jboss() {
-
-    if ! start-jboss; then
-        info "service already running"
+    if ! clean-logs "${jboss_home}"; then
+        warn "no logs were found to be cleaned, continuing the environment restart process ..."
     fi
 }
 
-function do-stop-jboss() {
-
-    stop-jboss
+function to-test() {
+    info "testing ..."
 }
-
 
 data_dir="/c/ovidiu/data"
 
@@ -66,13 +61,6 @@ function get-java-pid() {
     done
     IFS="$(printf ' \t\n')"
     echo "${pid}"
-}
-
-function remove-logs() {
-
-    local log_dir=$1
-    [ -z "${log_dir}" ] && { echo "no 'log_dir' provided" 1>&2; exit 1; } 
-    (cd "${log_dir}"; rm *) && echo "removed log files from ${log_dir}"
 }
 
 function export-data() {
