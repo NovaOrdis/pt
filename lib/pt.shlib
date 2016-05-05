@@ -29,6 +29,14 @@ function get-jboss-home() {
 #
 function stop-jboss() {
     echo "stopping the JBoss service ..."
-    net stop WFAS81SVC
-    return 0
+
+    #
+    # if the service was not started, the net command returns 2
+    #
+
+    local result
+    result=net stop WFAS81SVC
+
+    echo "result: ${result}"
+
 }
