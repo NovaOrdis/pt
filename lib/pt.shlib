@@ -34,8 +34,8 @@ function stop-jboss() {
     # if the service was not started, the net command returns 2
     #
 
-    local result
-    result=net stop WFAS81SVC
+    net stop WFAS81SVC
+    local result=$?
 
     echo "result: ${result}"
 
