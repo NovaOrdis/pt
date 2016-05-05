@@ -7,15 +7,15 @@ Usage:
 
 Commands:
 
-    version - report the version of the tool.
+  version - report the version of the tool.
 
-    status - report the environment status.
+  status - report the environment status.
 
-    reset - stop all environment components, clean logs and temporary data directories and files,
-      where necessary, and restart the environment components, bringing the environment in a state
-      ready for testing.
+  reset - stop all environment components, clean logs and temporary data directories and files,
+    where necessary, and restart the environment components, bringing the environment in a state
+    ready for testing.
 
-    collect - get all relevant data resulted from a test (configuration, logs, etc.), create a zip
-      file and places it in the directory exposed as the 'PT_DATA_DIR' environment variable.
+  collect - get all relevant data resulted from a test (configuration, logs, etc.), create a zip
+    file and places it in the directory exposed as the 'PT_DATA_DIR' environment variable.
 
 
