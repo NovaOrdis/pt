@@ -26,9 +26,14 @@ function do-restart() {
     local jboss_home=$1
     [ -z "${jboss_home}" ] && fail "'jboss_home' not provided"
 
-    if ! stop-jboss "${jboss_home}"; then
-        warn "the JBoss instance was not running"
+    if ! stop-jboss; then
+        warn "the JBoss instance was not running, continuing the environment restart process ..."
     fi
+}
+
+function do-start-jboss() {
+
+    start-jboss
 }
 
 data_dir="/c/ovidiu/data"
@@ -60,12 +65,6 @@ function remove-logs() {
     local log_dir=$1
     [ -z "${log_dir}" ] && { echo "no 'log_dir' provided" 1>&2; exit 1; } 
     (cd "${log_dir}"; rm *) && echo "removed log files from ${log_dir}"
-}
-
-function start-jboss-instance() {
-
-    echo "starting the JBoss service ..."
-    net start WFAS81SVC
 }
 
 function export-data() {

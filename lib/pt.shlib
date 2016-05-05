@@ -28,7 +28,8 @@ function get-jboss-home() {
 # not running. Fails if the JBoss instance was running but it failed to stop.
 #
 function stop-jboss() {
-    echo "stopping the JBoss service ..."
+
+    info "stopping the JBoss service ..."
 
     #
     # if the service was not started, the net command returns 2
@@ -57,3 +58,14 @@ function stop-jboss() {
     return 0
 
 }
+
+function start-jboss() {
+
+    info "starting the JBoss service ..."
+
+    net start WFAS81SVC
+
+    echo "net return value $?"
+}
+
+
