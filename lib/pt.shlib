@@ -123,7 +123,7 @@ function clean-logs() {
     [ -z "${jboss_home}" ] && fail "'jboss_home' not provided"
 
     local jboss_log_dir="${jboss_home}/standalone/log"
-    [ -d ${jboss_log_dir} ] || fail "JBoss log directory ${jboss_log_dir} is not a valid directory"
+    [ -d "${jboss_log_dir}" ] || fail "JBoss log directory ${jboss_log_dir} is not a valid directory"
 
     #(cd "${log_dir}"; rm *) && echo "removed log files from ${log_dir}"
 }
