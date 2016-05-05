@@ -89,7 +89,7 @@ function do-status() {
 
     local jboss_home=$1
     local java_pid=$(get-java-pid) || exit 1
-    local p=$(linux-to-win-path "${jboss_home}")
+    local p=$(cygpath "${jboss_home}")
 
     echo ""
     echo "JBOSS_HOME ${p}"
