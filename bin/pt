@@ -28,7 +28,7 @@ function do-test() {
     local local jboss_log_dir="${jboss_home}/standalone/log"
 
     if ! remove-files "${jboss_log_dir}"; then
-        warn "no logs were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment restart process ..."
+        warn "no files were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment restart process ..."
     fi
 }
 
@@ -44,7 +44,7 @@ function do-restart() {
     local local jboss_log_dir="${jboss_home}/standalone/log"
 
     if ! remove-files "${jboss_log_dir}"; then
-        warn "no logs were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment restart process ..."
+        warn "no files were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment restart process ..."
     fi
 }
 
