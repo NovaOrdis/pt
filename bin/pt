@@ -1,6 +1,9 @@
 #/bin/bash
 
-jboss_home="/c/Program Files/Centric Software/C8/wildfly-8.1.0"
+f=$(dirname $0)/../lib/std.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found" 1>&2; exit 1; }
+f=$(dirname $0)/../lib/pt.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found" 1>&2; exit 1; }
+
+#jboss_home=""
 data_dir="/c/ovidiu/data"
 
 function help() {
