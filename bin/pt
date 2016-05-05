@@ -85,35 +85,29 @@ function do-collect() {
     rm -r "${dir_path}" && echo "removed ${dir_path}" || exit 1
 }
 
-function do-test() {
+function do-status() {
 
     local jboss_home=$1
+    local java_pid=$(get-java-pid) || exit 1
+    local p=$(linux-to-win-path "${jboss_home}")
+
+    echo ""
+    echo "JBOSS_HOME ${p}"
+
+    if [ -z "${java_pid}" ]; then
+        echo "no java process found"
+    else
+        echo "java (PID ${java_pid}) running"
+    fi
+
+    local log_dir=$(linux-to-win-path "${jboss_home}/standalone/log")
+
+    echo "log files:"
+    for lf in $(dir "${log_dir}"); do
+        echo "    ${lf}"
+    done
 }
 
 main $@
 
-#function status() {
-#
-#    local jboss_home=$1
-#
-#    local java_pid=$(get-java-pid) || exit 1
-#    local p=$(linux-to-win-path "${jboss_home}")
-#
-#    echo ""
-#    echo "JBOSS_HOME ${p}"
-#
-#    if [ -z "${java_pid}" ]; then
-#        echo "no java process found"
-#    else
-#        echo "java (PID ${java_pid}) running"
-#    fi
-#
-#    local log_dir=$(linux-to-win-path "${jboss_home}/standalone/log")
-#
-#    echo "log files:"
-#    for lf in $(dir "${log_dir}"); do
-#        echo "    ${lf}"
-#    done
-#}
-#
 

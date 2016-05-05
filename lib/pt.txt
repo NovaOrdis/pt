@@ -11,8 +11,4 @@ Commands:
       where necessary, and restart the environment components, bringing the environment in a state
       ready for testing.
 
-    status
-
-    start - cleans the log files and restart the instances.
-
-    stop
+    status - report the environment status.
