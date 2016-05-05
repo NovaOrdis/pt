@@ -3,6 +3,16 @@
 f=$(dirname $0)/../lib/std.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found, $(basename $0) incorrectly installed" 1>&2; exit 1; }
 f=$(dirname $0)/../lib/pt.shlib; [ -f ${f} ] && . ${f} || { echo "${f} not found, $(basename $0) incorrectly installed" 1>&2; exit 1; }
 
+#
+#
+#
+
+version=1
+
+#
+#
+#
+
 function main() {
 
     local command=""
@@ -106,6 +116,10 @@ function do-status() {
     for lf in $(dir "${log_dir}"); do
         echo "    ${lf}"
     done
+}
+
+function do-version() {
+    echo "${version}"
 }
 
 main $@

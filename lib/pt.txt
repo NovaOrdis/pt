@@ -12,3 +12,5 @@ Commands:
       ready for testing.
 
     status - report the environment status.
+
+    version - report the version of the tool
