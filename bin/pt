@@ -22,10 +22,12 @@ function main() {
 }
 
 function do-test() {
-    local jboss_home=$1
-    info "testing ..."
 
-    clean-logs "${jboss_home}"
+    local jboss_home=$1
+
+    if ! clean-logs "${jboss_home}"; then
+        warn "no logs were found to be cleaned, continuing the environment restart process ..."
+    fi
 }
 
 function do-restart() {
