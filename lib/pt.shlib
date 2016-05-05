@@ -136,7 +136,7 @@ function clean-logs() {
     fi
 
     (cd "${jboss_log_dir}"; rm *) && \
-        info "removed log files from ${jboss_log_dir}"
+        info "removed log files from ${jboss_log_dir}" || \
         fail "failed to remove log files from ${jboss_log_dir}"
 }
 
