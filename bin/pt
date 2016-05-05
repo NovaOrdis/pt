@@ -21,44 +21,34 @@ function main() {
     do-${command} "${jboss_home}" "${data_dir}"
 }
 
-function do-test() {
-
-    local jboss_home=$1
-
-    local local jboss_log_dir="${jboss_home}/standalone/log"
-
-    if ! remove-files "${jboss_log_dir}"; then
-        warn "no files were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment restart process ..."
-    fi
-}
-
-function do-restart() {
+function do-reset() {
 
     local jboss_home=$1
     [ -z "${jboss_home}" ] && fail "'jboss_home' not provided"
 
     if ! stop-jboss; then
-        warn "the JBoss instance was not running, continuing the environment restart process ..."
+        warn "the JBoss instance was not running, continuing the environment reset process ..."
     fi
 
     local local jboss_log_dir="${jboss_home}/standalone/log"
 
     if ! remove-files "${jboss_log_dir}"; then
-        warn "no files were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment restart process ..."
+        warn "no files were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment reset process ..."
     fi
+
+    if ! start-jboss; then
+        fail "the JBoss instance was supposed to be stopped, but we found it running ..."
+    fi
+}
+
+function do-test() {
+
+    local jboss_home=$1
 }
 
 main $@
 
 #data_dir="/c/ovidiu/data"
-#
-#function linux-to-win-path() {
-#
-#    local path=$1
-#    path=${path/\/c\//C:\\}
-#    path=${path//\//\\}
-#    echo "${path}"
-#}
 #
 #function get-java-pid() {
 #

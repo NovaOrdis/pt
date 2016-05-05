@@ -7,9 +7,9 @@ Usage:
 
 Commands:
 
-    restart - Stop all environment components, clean logs and temporary data directories and
-      files, where necessary, and restart the environment components, rendering the
-      environment ready for testing.
+    reset - stop all environment components, clean logs and temporary data directories and files,
+      where necessary, and restart the environment components, bringing the environment in a state
+      ready for testing.
 
     status
 
