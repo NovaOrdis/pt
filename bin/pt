@@ -25,8 +25,10 @@ function do-test() {
 
     local jboss_home=$1
 
-    if ! clean-logs "${jboss_home}"; then
-        warn "no logs were found to be cleaned, continuing the environment restart process ..."
+    local local jboss_log_dir="${jboss_home}/standalone/log"
+
+    if ! remove-files "${jboss_log_dir}"; then
+        warn "no logs were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment restart process ..."
     fi
 }
 
@@ -39,8 +41,10 @@ function do-restart() {
         warn "the JBoss instance was not running, continuing the environment restart process ..."
     fi
 
-    if ! clean-logs "${jboss_home}"; then
-        warn "no logs were found to be cleaned, continuing the environment restart process ..."
+    local local jboss_log_dir="${jboss_home}/standalone/log"
+
+    if ! remove-files "${jboss_log_dir}"; then
+        warn "no logs were found in ${jboss_log_dir}, so no logs will be removed, continuing the environment restart process ..."
     fi
 }
 

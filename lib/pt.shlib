@@ -114,19 +114,19 @@ function start-jboss() {
 }
 
 #
-# return 0 if logs were cleaned, 1 if no logs to clean were found and it fails if anything fails during
+# Expects a directory, and remove all files and sub-directories from that directory.
+#
+# Return 0 if logs were cleaned, 1 if no logs to clean were found and it fails if anything fails during
 # the cleaning process
 #
-function clean-logs() {
+function remove-files() {
 
-    local jboss_home=$1
-    [ -z "${jboss_home}" ] && fail "'jboss_home' not provided"
-
-    local jboss_log_dir="${jboss_home}/standalone/log"
-    [ -d "${jboss_log_dir}" ] || fail "JBoss log directory ${jboss_log_dir} is not a valid directory"
+    local dir=$1
+    [ -z "${dir}" ] && fail "'dir' not provided"
+    [ -d "${dir}" ] || fail "${dir} is not a valid directory"
 
     local content
-    content=$(ls -m "${jboss_log_dir}")
+    content=$(ls -m "${dir}")
 
     if [ -z "${content}" ]; then
         #
@@ -135,9 +135,7 @@ function clean-logs() {
         return 1
     fi
 
-    (cd "${jboss_log_dir}"; rm *) && \
-        info "removed log files from ${jboss_log_dir}" || \
-        fail "failed to remove log files from ${jboss_log_dir}"
+    (cd "${dir}"; rm *) && info "removed all files from ${dir}" || fail "failed to remove files from ${dir}"
 
     return 0
 }
