@@ -125,7 +125,10 @@ function clean-logs() {
     local jboss_log_dir="${jboss_home}/standalone/log"
     [ -d "${jboss_log_dir}" ] || fail "JBoss log directory ${jboss_log_dir} is not a valid directory"
 
-    if [ -z "$(ls -m '${jboss_log_dir}')" ]; then
+    local content
+    content=$(ls -m "${jboss_log_dir}")
+
+    if [ -z "${content}" ]; then
         #
         # empty directory
         #
