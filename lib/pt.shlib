@@ -125,7 +125,16 @@ function clean-logs() {
     local jboss_log_dir="${jboss_home}/standalone/log"
     [ -d "${jboss_log_dir}" ] || fail "JBoss log directory ${jboss_log_dir} is not a valid directory"
 
-    #(cd "${log_dir}"; rm *) && echo "removed log files from ${log_dir}"
+    if [ -z "$(ls -m \"${jboss_log_dir}\")" ]; then
+        #
+        # empty directory
+        #
+        return 1
+    fi
+
+    (cd "${jboss_log_dir}"; rm *) && \
+        info "removed log files from ${jboss_log_dir}"
+        fail "failed to remove log files from ${jboss_log_dir}"
 }
 
 
