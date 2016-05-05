@@ -93,7 +93,7 @@ function start-jboss() {
         return 1
     fi
 
-    echo "net return value ${result}"
+    debug "net return value ${result}"
 
     #
     # fail if we failed to start a JBoss instance
