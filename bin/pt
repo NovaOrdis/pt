@@ -100,7 +100,7 @@ function do-status() {
         echo "java (PID ${java_pid}) running"
     fi
 
-    local log_dir=$(linux-to-win-path "${jboss_home}/standalone/log")
+    local log_dir=$(cygpath "${jboss_home}/standalone/log")
 
     echo "log files:"
     for lf in $(dir "${log_dir}"); do
