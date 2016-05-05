@@ -95,6 +95,10 @@ function do-collect() {
     rm -r "${dir_path}" && echo "removed ${dir_path}" || exit 1
 }
 
+function do-version() {
+    echo "${version}"
+}
+
 function do-status() {
 
     local jboss_home=$1
@@ -116,10 +120,6 @@ function do-status() {
     for lf in $(dir "${log_dir}"); do
         echo "    ${lf}"
     done
-}
-
-function do-version() {
-    echo "${version}"
 }
 
 main $@
