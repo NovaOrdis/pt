@@ -5,5 +5,5 @@ function help() {
     local help_file
     help_file=$(dirname $0)/../lib/pt.txt
     [ ! -f ${help_file} ] && fail "help file ${help_file} not found, $(basename $0) was not installed correctly"
-
+    cat ${help_file}
 }
