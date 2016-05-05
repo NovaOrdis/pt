@@ -55,9 +55,34 @@ function do-reset() {
 #
 function do-collect() {
 
+    local jboss_home=$1
+    [ -z "${jboss_home}" ] && fail "'jboss_home' not provided"
+
     [ -z "${PT_DATA_DIR}" ] && fail "required 'PT_DATA_DIR' environment variable not set"
     local data_dir="${PT_DATA_DIR}"
-    [ -d "${data_dir}" ] || fail "the target data directory ${data_dir} is not a valid directory"
+    [ -d "${data_dir}" ] || fail "the target data directory 'PT_DATA_DIR' ${data_dir} is not a valid directory"
+
+    local dir_name="pt-data-"$(date +'%y-%m-%d-%H-%M-%S')
+    local dir_path="${data_dir}/${dir_name}"
+    mkdir "${dir_path}" && info "created ${dir_name}" || fail "failed to create ${dir_path}"
+
+    local access_log_file=${jboss_home}/standalone/log/access_log.log
+    cp "${access_log_file}" "${dir_path}" && echo "copied "$(basename "${access_log_file}") || exit 1
+
+    local access_log_def_file_name=$(basename "${access_log_file}" .log).def
+
+    #
+    # copy the access log definition
+    #
+    local config_file=${jboss_home}/standalone/configuration/standalone-pi-mssql-ha-tcp.xml
+
+    local access_log_format
+    access_log_format=$(grep "<access-log pattern=" "${config_file}") || exit 1
+    access_log_format=${access_log_format#*<access-log pattern=\"}
+    access_log_format=${access_log_format%\"/>}
+    echo ${access_log_format} > "${dir_path}/${access_log_def_file_name}" && echo "access log definition written in ${access_log_def_file_name}"
+    (cd "${dir_path}"; zip -r ../${dir_name}.zip *) && echo "packaged data as ${dir_name}.zip" || exit 1
+    rm -r "${dir_path}" && echo "removed ${dir_path}" || exit 1
 }
 
 function do-test() {
@@ -67,37 +92,6 @@ function do-test() {
 
 main $@
 
-#data_dir="/c/ovidiu/data"
-#
-#
-#function export-data() {
-#
-#    local jboss_home=$1
-#    local target_dir=$2
-#
-#    local dir_name="load-data-"$(date +'%y-%m-%d-%H-%M-%S')
-#    local dir_path="${target_dir}/${dir_name}"
-#    mkdir "${dir_path}" && echo "created ${dir_name}" || exit 1
-#
-#    local access_log_file=${jboss_home}/standalone/log/access_log.log
-#    cp "${access_log_file}" "${dir_path}" && echo "copied "$(basename "${access_log_file}") || exit 1
-#
-#    local access_log_def_file_name=$(basename "${access_log_file}" .log).def
-#
-#    #
-#    # copy the access log definition
-#    #
-#    local config_file=${jboss_home}/standalone/configuration/standalone-pi-mssql-ha-tcp.xml
-#
-#    local access_log_format
-#    access_log_format=$(grep "<access-log pattern=" "${config_file}") || exit 1
-#    access_log_format=${access_log_format#*<access-log pattern=\"}
-#    access_log_format=${access_log_format%\"/>}
-#    echo ${access_log_format} > "${dir_path}/${access_log_def_file_name}" && echo "access log definition written in ${access_log_def_file_name}"
-#    (cd "${dir_path}"; zip -r ../${dir_name}.zip *) && echo "packaged data as ${dir_name}.zip" || exit 1
-#    rm -r "${dir_path}" && echo "removed ${dir_path}" || exit 1
-#}
-#
 #function status() {
 #
 #    local jboss_home=$1
