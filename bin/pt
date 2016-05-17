@@ -93,8 +93,7 @@ function do-collect() {
 
     local access_log_format
     access_log_format=$(grep "<access-log pattern=" "${config_file}") || exit 1
-    access_log_format=${access_log_format#*<access-log pattern=\"}
-    access_log_format=${access_log_format%\"/>}
+    access_log_format=$(echo "${access_log_format}" | sed "s/^.*<access-log pattern=\"\(.*\)\"\/> *$/\1/") || exit 1
     echo ${access_log_format} > "${dir_path}/${access_log_def_file_name}" && echo "access log definition written in ${access_log_def_file_name}"
     (cd "${dir_path}"; zip -r ../${dir_name}.zip *) && echo "packaged data as ${dir_name}.zip" || exit 1
     rm -r "${dir_path}" && echo "removed ${dir_path}" || exit 1
